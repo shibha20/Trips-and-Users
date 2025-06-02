@@ -1,0 +1,14 @@
+# Write your MySQL query statement belo
+
+select request_at as 'Day', 
+        ROUND(SUM(CASE WHEN status IN ('cancelled_by_client',                       'cancelled_by_driver') THEN 1.00
+                            ELSE 0.00 END)
+                             /count(status),2)
+        as 'Cancellation Rate'   
+FROM trips t 
+
+WHERE request_at >= '2013-10-01' AND request_at <= '2013-10-03'
+  and  client_id not in (select users_id from Users where role = 'client' and banned ='Yes') 
+and 
+    driver_id not in (select users_id from Users where role = 'driver' and banned ='Yes')  
+GROUP BY request_at;
